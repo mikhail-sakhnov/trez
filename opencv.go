@@ -4,8 +4,11 @@ package trez
 //#cgo linux  pkg-config: opencv
 //#cgo darwin pkg-config: opencv
 //
+//#include <opencv2/core/fast_math.hpp>
 //#include <opencv/highgui.h>
 //#include <opencv/cv.h>
+//#include <opencv2/core/core_c.h>
+//#include <opencv2/imgcodecs/imgcodecs_c.h>
 //
 //uchar* ptr_from_mat(CvMat* mat){
 //	return mat->data.ptr;
