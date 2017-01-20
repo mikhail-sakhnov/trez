@@ -143,15 +143,25 @@ func Resize(data []byte, options Options) ([]byte, error) {
 	if options.Quality == 0 {
 		options.Quality = 95
 	}
-
-	compression := [3]C.int{
-		C.CV_IMWRITE_JPEG_QUALITY,
-		C.int(options.Quality),
-		0,
+	var compression [3]C.int
+	var ext *C.char
+	switch options.Format {
+	case JPEG:
+		ext = C.CString(".jpg")
+		compression = [3]C.int{
+			C.CV_IMWRITE_JPEG_QUALITY,
+			C.int(options.Quality),
+			0,
+		}
+	case WEBP:
+		ext = C.CString(".webp")
+		compression = [3]C.int{
+			C.CV_IMWRITE_WEBP_QUALITY,
+			C.int(options.Quality),
+			0,
+		}
 	}
-
 	// encode
-	ext := C.CString(".jpg")
 	ret := C.cvEncodeImage(ext, unsafe.Pointer(dst), &compression[0])
 	C.free(unsafe.Pointer(ext))
 

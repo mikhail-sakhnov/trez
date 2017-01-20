@@ -14,6 +14,13 @@ const (
 	SOUTH_EAST
 )
 
+type Format int
+
+const (
+	JPEG Format = iota
+	WEBP
+)
+
 type Algo int
 
 const (
@@ -27,7 +34,7 @@ type Options struct {
 	Algo       Algo
 	Background [3]int
 	Gravity    Gravity
-	Enalarge   bool
+	Format     Format
 	Quality    int
 }
 

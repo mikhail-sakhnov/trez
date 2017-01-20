@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/daddye/trez"
+	"github.com/soider/trez"
 	"github.com/rcrowley/go-metrics"
 )
 

@@ -51,7 +51,7 @@ opencv-2.4.9$ cmake -DBUILD_JASPER=OFF -DBUILD_JPEG=OFF \
 Finally:
 
 ```
-go get github.com/daddye/trez
+go get github.com/soider/trez
 ```
 
 ## Features
