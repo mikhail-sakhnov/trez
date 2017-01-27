@@ -36,6 +36,7 @@ type Options struct {
 	Gravity    Gravity
 	Format     Format
 	Quality    int
+	Progressive bool
 }
 
 func (a Algo) String() string {

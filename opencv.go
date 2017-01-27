@@ -184,9 +184,13 @@ func resize(src *C.IplImage, options Options) ([]byte, error) {
 	var ext *C.char
 	switch options.Format {
 	case JPEG:
+		modificator := C.CV_IMWRITE_JPEG_QUALITY
+		if options.Progressive {
+			modificator = C.CV_IMWRITE_JPEG_PROGRESSIVE
+		}
 		ext = C.CString(".jpg")
 		compression = [3]C.int{
-			C.CV_IMWRITE_JPEG_QUALITY,
+			C.int(modificator),
 			C.int(options.Quality),
 			0,
 		}
