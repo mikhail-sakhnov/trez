@@ -547,21 +547,28 @@ func Test200x100WideTop(t *testing.T) {
 
 }
 
-func TestResizeFromFile(t *testing.T) {
-	opts := Options{
-		Algo:          FILL,
-		Gravity:       NORTH_WEST,
-		Width:         300,
-		Height:        200,
-		SharpenAmount: 100,
-		SharpenRadius: 0.5,
+
+func TestCalcNewSize(t *testing.T) {
+	cases := []struct {
+		name string
+		inpWidth, inpHeight int
+		outWidth, outHeight int
+		maxSide int
+	}{
+		{
+			"No resize", 100, 100, 100, 100, 500,
+		},
+		{
+			"Shrink by width ratio", 1000, 100, 500, 50, 500,
+		},
+		{
+			"Shrink by height ratio", 100, 1000, 50, 500, 500,
+		},
 	}
 
-	srcPath := "testdata/200x100_wide_top.png"
-
-	_, err := ResizeFromFile(srcPath, opts)
-	assert.NoError(t, err)
-
-	_, err = ResizeFromFile("NotAFile", opts)
-	assert.Error(t, err)
+	for _, tCase := range cases {
+		nWidth, nHeight := calcNewSize(tCase.inpWidth, tCase.inpHeight, tCase.maxSide)
+		assert.Equal(t, tCase.outWidth, nWidth, tCase.name + ": width error")
+		assert.Equal(t, tCase.outHeight, nHeight, tCase.name + ": height error")
+	}
 }

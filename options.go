@@ -31,6 +31,7 @@ const (
 type Options struct {
 	Width      int
 	Height     int
+	MaxSide    int
 	Algo       Algo
 	Background [3]int
 	Gravity    Gravity

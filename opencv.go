@@ -49,6 +49,21 @@ func Resize(data []byte, options Options) ([]byte, error) {
 	return resize(src, options)
 }
 
+func calcNewSize(width int, height int, maxSide int) (int, int) {
+	if width <= maxSide && height <= maxSide {
+		return width, height
+	}
+	var ratio float32
+	if width >= height {
+		ratio = float32(maxSide) / float32(width)
+	} else {
+		ratio = float32(maxSide) / float32(height)
+	}
+	width = int(float32(width) * ratio)
+	height = int(float32(height) * ratio)
+	return width, height
+}
+
 func resize(src *C.IplImage, options Options) ([]byte, error) {
 	// Validate the source
 	if src == nil || src.width == 0 || src.height == 0 {
@@ -64,7 +79,9 @@ func resize(src *C.IplImage, options Options) ([]byte, error) {
 	if options.Height == 0 {
 		options.Height = int(src.height)
 	}
-
+	if options.MaxSide != 0 {
+		options.Width, options.Height = calcNewSize(int(src.width), int(src.height), options.MaxSide)
+	}
 	// Get the size of the desired output image
 	size := C.cvSize(C.int(options.Width), C.int(options.Height))
 
