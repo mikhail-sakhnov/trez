@@ -41,16 +41,16 @@ func imageTestHelper(t *testing.T, src_path string, output_prefix string, opts O
 	require.NoError(t, err)
 
 	// Perform the resize operation and make sure there are no errors
-	// Data will be jpeg encoded
+	// data.Data will be jpeg encoded
 	data, err := Resize(src, opts)
 
 	dest_name := fmt.Sprintf("%s%dx%d_%s", output_prefix, opts.Width, opts.Height, opts.Algo)
 
 	// Write the resized image back to disk
-	dumpImage(dest_name, data)
+	dumpImage(dest_name, data.Data)
 
 	// Read back the resized image
-	im, _, err := image.DecodeConfig(bytes.NewReader(data))
+	im, _, err := image.DecodeConfig(bytes.NewReader(data.Data))
 
 	// Make sure the resized image looks good
 	assert.NoError(err)
@@ -71,22 +71,22 @@ func TestGeneric(t *testing.T) {
 	// just encode
 	data, err := Resize(src, Options{})
 	assert.NoError(err)
-	dumpImage("just_image", data)
-	im, _, err := image.DecodeConfig(bytes.NewReader(data))
+	dumpImage("just_image", data.Data)
+	im, _, err := image.DecodeConfig(bytes.NewReader(data.Data))
 	assert.NoError(err)
 	assert.Equal(1024, im.Width)
 	assert.Equal(768, im.Height)
-	size := len(data)
+	size := len(data.Data)
 
 	// just quality
 	data, err = Resize(src, Options{Quality: 50})
 	assert.NoError(err)
-	dumpImage("just_quality", data)
-	im, _, err = image.DecodeConfig(bytes.NewReader(data))
+	dumpImage("just_quality", data.Data)
+	im, _, err = image.DecodeConfig(bytes.NewReader(data.Data))
 	assert.NoError(err)
 	assert.Equal(1024, im.Width)
 	assert.Equal(768, im.Height)
-	assert.True(size > len(data))
+	assert.True(size > len(data.Data))
 
 	opts := []Options{
 		{Width: 200},
@@ -104,8 +104,8 @@ func TestGeneric(t *testing.T) {
 			opt.Background = [3]int{255, 255, 255}
 			data, err := Resize(src, opt)
 			assert.NoError(err)
-			dumpImage(fmt.Sprintf("American_Dad_to_%dx%d_%s", opt.Width, opt.Height, opt.Algo), data)
-			_, _, err = image.DecodeConfig(bytes.NewReader(data))
+			dumpImage(fmt.Sprintf("American_Dad_to_%dx%d_%s", opt.Width, opt.Height, opt.Algo), data.Data)
+			_, _, err = image.DecodeConfig(bytes.NewReader(data.Data))
 			assert.NoError(err)
 		}
 	}
