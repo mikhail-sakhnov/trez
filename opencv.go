@@ -30,7 +30,7 @@ var (
 	errEncoding            = errors.New("error during encoding")
 )
 
-func Resize(data []byte, options Options) ([]byte, error) {
+func Resize(data []byte, options Options) (*ProcessResult, error) {
 	if len(data) == 0 {
 		return nil, errNoData
 	}
@@ -64,8 +64,9 @@ func calcNewSize(width int, height int, maxSide int) (int, int) {
 	return width, height
 }
 
-func resize(src *C.IplImage, options Options) ([]byte, error) {
+func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 	// Validate the source
+
 	if src == nil || src.width == 0 || src.height == 0 {
 		return nil, errInvalidSourceFormat
 	}
@@ -91,7 +92,7 @@ func resize(src *C.IplImage, options Options) ([]byte, error) {
 
 	// Pointer to the final destination image.
 	var dst *C.IplImage
-
+	result := &ProcessResult{Width: options.Width, Height: options.Height}
 	switch options.Algo {
 	case FIT:
 		ratio := math.Min(xf, yf)
@@ -230,8 +231,8 @@ func resize(src *C.IplImage, options Options) ([]byte, error) {
 	ptr := C.ptr_from_mat(ret)
 	data := C.GoBytes(unsafe.Pointer(ptr), ret.step)
 	C.cvReleaseMat(&ret)
-
-	return data, nil
+	result.Data = data
+	return result, nil
 }
 
 type ratio struct {
