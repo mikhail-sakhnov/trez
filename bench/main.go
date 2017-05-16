@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/soider/trez"
 	"github.com/rcrowley/go-metrics"
+	"github.com/soider/trez"
 )
 
 var images = metrics.NewTimer()
