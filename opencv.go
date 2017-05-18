@@ -67,7 +67,7 @@ func calcNewSize(options Options) (int, int) {
 		return width, height
 	}
 	if options.MaxHeight > 0 {
-		maxHeight := options.MaxWidth
+		maxHeight := options.MaxHeight
 		if height <= maxHeight {
 			return width, height
 		}
