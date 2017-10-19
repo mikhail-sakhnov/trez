@@ -43,7 +43,7 @@ func Resize(data []byte, options Options) (*ProcessResult, error) {
 	C.set_data_mat(mat, unsafe.Pointer(&data[0]))
 
 	// Decode the source image
-	src := C.cvDecodeImage(mat, C.CV_LOAD_IMAGE_COLOR)
+	src := C.cvDecodeImage(mat, C.CV_LOAD_IMAGE_UNCHANGED)
 	C.cvReleaseMat(&mat)
 
 	return resize(src, options)
@@ -241,6 +241,13 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 		ext = C.CString(".webp")
 		compression = [3]C.int{
 			C.CV_IMWRITE_WEBP_QUALITY,
+			C.int(options.Quality),
+			0,
+		}
+	case PNG:
+		ext = C.CString(".png")
+		compression = [3]C.int{
+			C.CV_IMWRITE_PNG_STRATEGY_DEFAULT,
 			C.int(options.Quality),
 			0,
 		}

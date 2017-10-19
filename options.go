@@ -19,6 +19,7 @@ type Format int
 const (
 	JPEG Format = iota
 	WEBP
+	PNG
 )
 
 type Algo int
