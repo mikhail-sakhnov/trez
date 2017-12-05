@@ -19,6 +19,7 @@ type Format int
 const (
 	JPEG Format = iota
 	WEBP
+	PNG
 )
 
 type Algo int
@@ -28,18 +29,29 @@ const (
 	FILL
 )
 
+type Interpolation int
+
+const (
+	NN Interpolation = iota + 1
+	LINEAR
+	CUBIC
+	AREA
+	LANCZOS4
+)
+
 type Options struct {
-	Width       int
-	Height      int
-	MaxSide     int
-	MaxWidth    int
-	MaxHeight   int
-	Algo        Algo
-	Background  [3]int
-	Gravity     Gravity
-	Format      Format
-	Quality     int
-	Progressive bool
+	Width         int
+	Height        int
+	MaxSide       int
+	MaxWidth      int
+	MaxHeight     int
+	Algo          Algo
+	Background    [3]int
+	Gravity       Gravity
+	Format        Format
+	Quality       int
+	Progressive   bool
+	Interpolation Interpolation
 }
 
 func (a Algo) String() string {
