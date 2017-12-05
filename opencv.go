@@ -116,7 +116,7 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 		options.Quality = 100
 	}
 	if options.Quality == 0 {
-		options.Quality = 85	// default value
+		options.Quality = 85 // default value
 	}
 
 	// Get the size of the desired output image
@@ -125,6 +125,20 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 	// Get the x and y factors
 	xf := float64(size.width) / float64(src.width)
 	yf := float64(size.height) / float64(src.height)
+
+	interpolation := C.CV_INTER_LANCZOS4
+	switch options.Interpolation {
+	case NN:
+		interpolation = C.CV_INTER_NN
+	case LINEAR:
+		interpolation = C.CV_INTER_LINEAR
+	case CUBIC:
+		interpolation = C.CV_INTER_CUBIC
+	case AREA:
+		interpolation = C.CV_INTER_AREA
+	case LANCZOS4:
+		interpolation = C.CV_INTER_LANCZOS4
+	}
 
 	// Pointer to the final destination image.
 	var dst *C.IplImage
@@ -174,7 +188,7 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 		b, g, r := options.Background[2], options.Background[1], options.Background[0]
 		C.cvSet(unsafe.Pointer(dst), C.cvScalar(C.double(b), C.double(g), C.double(r), 0), nil)
 		C.cvSetImageROI(dst, rect)
-		C.cvResize(unsafe.Pointer(src), unsafe.Pointer(dst), C.CV_INTER_AREA)
+		C.cvResize(unsafe.Pointer(src), unsafe.Pointer(dst), C.int(interpolation))
 		C.cvResetImageROI(dst)
 	case FILL:
 		// Algo: Scale image down keeping aspect ratio
@@ -188,7 +202,7 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 		mid := C.cvCreateImage(intermediateSize, src.depth, src.nChannels)
 		defer C.cvReleaseImage(&mid)
 
-		C.cvResize(unsafe.Pointer(src), unsafe.Pointer(mid), C.CV_INTER_AREA)
+		C.cvResize(unsafe.Pointer(src), unsafe.Pointer(mid), C.int(interpolation))
 
 		// Determine proper ROI rectangle placement
 		rect := C.CvRect{}
@@ -237,7 +251,7 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 		ext = C.CString(".jpg")
 		params = [6]C.int{
 			C.CV_IMWRITE_JPEG_QUALITY,
-			C.int(options.Quality),	// from 0 to 100 (the higher is the better). Default value is 95.
+			C.int(options.Quality), // from 0 to 100 (the higher is the better). Default value is 95.
 			0,
 			0,
 			0,
