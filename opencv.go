@@ -244,7 +244,8 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 			0,
 		}
 		if options.Progressive {
-			params[3] = C.CV_IMWRITE_JPEG_PROGRESSIVE
+			params[2] = C.CV_IMWRITE_JPEG_PROGRESSIVE
+			params[3] = 1
 		}
 	case WEBP:
 		ext = C.CString(".webp")
