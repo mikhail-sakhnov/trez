@@ -156,8 +156,8 @@ func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
 
 		// Determine proper ROI rectangle placement
 		rect := C.CvRect{}
-		rect.width = C.int(math.Floor(float64(src.width) * ratio))
-		rect.height = C.int(math.Floor(float64(src.height) * ratio))
+		rect.width = C.int(math.Max(math.Floor(float64(src.width) * ratio), 1))
+		rect.height = C.int(math.Max(math.Floor(float64(src.height) * ratio), 1))
 		switch options.Gravity {
 		case CENTER:
 			rect.x = (size.width - rect.width) / 2
