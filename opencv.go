@@ -54,7 +54,7 @@ func calcNewSize(options Options) (int, int) {
 	if options.MaxSide > 0 {
 		maxSide := options.MaxSide
 		if width <= maxSide && height <= maxSide {
-			return width, height
+			return max(width, 1), max(height, 1)
 		}
 		var ratio float32
 		if width >= height {
@@ -64,30 +64,37 @@ func calcNewSize(options Options) (int, int) {
 		}
 		width = int(float32(width) * ratio)
 		height = int(float32(height) * ratio)
-		return width, height
+		return max(width, 1), max(height, 1)
 	}
 	if options.MaxHeight > 0 {
 		maxHeight := options.MaxHeight
 		if height <= maxHeight {
-			return width, height
+			return max(width, 1), max(height, 1)
 		}
 		ratio := float32(maxHeight) / float32(height)
 		width = int(float32(width) * ratio)
 		height = int(float32(height) * ratio)
-		return width, height
+		return max(width, 1), max(height, 1)
 	}
 	if options.MaxWidth > 0 {
 		maxWidth := options.MaxWidth
 		if width <= maxWidth {
-			return width, height
+			return max(width, 1), max(height, 1)
 		}
 		ratio := float32(maxWidth) / float32(width)
 		width = int(float32(width) * ratio)
 		height = int(float32(height) * ratio)
-		return width, height
+		return max(width, 1), max(height, 1)
 	}
 
-	return width, height
+	return max(width, 1), max(height, 1)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
 
 func resize(src *C.IplImage, options Options) (*ProcessResult, error) {
